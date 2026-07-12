@@ -37,6 +37,27 @@ defmodule MetersWeb.PageControllerTest do
       assert html =~ "Zgłoszenie wysłane"
       refute html =~ ~s(id="leadForm")
     end
+
+    test "includes SEO meta tags and FAQ structured data", %{conn: conn} do
+      html = conn |> get(~p"/") |> html_response(200)
+
+      assert html =~ ~s(rel="canonical")
+      assert html =~ ~s(property="og:title")
+      assert html =~ ~s(name="twitter:card")
+      assert html =~ ~s(type="application/ld+json")
+      assert html =~ ~s("@type":"FAQPage")
+    end
+  end
+
+  describe "GET /sitemap.xml" do
+    test "returns an XML sitemap listing the home page", %{conn: conn} do
+      conn = get(conn, ~p"/sitemap.xml")
+
+      assert response_content_type(conn, :xml)
+      body = response(conn, 200)
+      assert body =~ "<urlset"
+      assert body =~ "<loc>"
+    end
   end
 
   describe "POST /leads" do

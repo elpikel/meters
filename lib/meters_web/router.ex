@@ -19,6 +19,7 @@ defmodule MetersWeb.Router do
 
     get "/", PageController, :home
     post "/leads", PageController, :create
+    get "/sitemap.xml", PageController, :sitemap
   end
 
   # Other scopes may use custom stacks.
