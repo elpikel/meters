@@ -108,4 +108,6 @@ USER nobody
 # can auto-detect the container port.
 EXPOSE 4000
 
-CMD ["/app/bin/server"]
+# Run migrations on every boot, then start the server (server won't start if
+# migrations fail). Same approach as the przetargowi deployment.
+CMD /app/bin/migrate && /app/bin/server

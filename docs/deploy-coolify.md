@@ -126,20 +126,25 @@ Notes:
 
 ---
 
-## 6. Run migrations on every deploy
+## 6. Migrations (automatic — baked into the image)
 
-Set **Pre-deployment Command** (App → General/Advanced):
+Migrations run **on every container boot**, via the Dockerfile — no Coolify setting to
+remember (matching `przetargowi`):
 
+```dockerfile
+CMD /app/bin/migrate && /app/bin/server
 ```
-/app/bin/migrate
-```
 
-Coolify runs this in a container of the freshly-built image **before** it swaps in the
-new version, so the schema is always migrated before the app serves traffic. It calls
-`Meters.Release.migrate/0`.
+`bin/migrate` calls `Meters.Release.migrate/0`, then the server starts. The `&&` means a
+failed migration aborts startup, so a broken schema never serves traffic. Ecto uses a
+migration lock, so running it on every boot (incl. restarts) is safe.
 
 > First deploy only: the DB is empty; `bin/migrate` creates the schema. `ecto.create`
 > is **not** needed — the database itself already exists from step 3.
+>
+> **To fix an already-running, unmigrated prod** (tables missing), run it once now without
+> waiting for a redeploy: Coolify → app → **Terminal / Execute Command** → `/app/bin/migrate`
+> (or `docker exec -it <container> /app/bin/migrate`).
 
 ---
 
