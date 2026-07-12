@@ -23,6 +23,11 @@ config :meters, MetersWeb.Endpoint,
 # In test we don't send emails
 config :meters, Meters.Mailer, adapter: Swoosh.Adapters.Test
 
+# Route the analytics proxy's outbound Req calls to a Req.Test stub (no retries in tests)
+config :meters, :analytics_req_options,
+  plug: {Req.Test, MetersWeb.AnalyticsController},
+  retry: false
+
 # Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false
 

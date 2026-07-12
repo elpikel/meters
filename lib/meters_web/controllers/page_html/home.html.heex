@@ -168,7 +168,9 @@
           szacunkowa nadpłata — do tego dochodzą odsetki za lata od zakupu
         </div>
       </div>
-      <a class="btn" href="#zgloszenie">Sprawdź moją umowę bezpłatnie ↓</a>
+      <a class="btn plausible-event-name=CTA+Kalkulator" href="#zgloszenie">
+        Sprawdź moją umowę bezpłatnie ↓
+      </a>
     </div>
   </section>
 
@@ -216,7 +218,9 @@
     <h2>Najczęstsze pytania</h2>
     <div class="facts">
       <details>
-        <summary>Skąd w ogóle ten problem?</summary>
+        <summary class="plausible-event-name=FAQ plausible-event-pytanie=problem">
+          Skąd w ogóle ten problem?
+        </summary>
         <div class="a">
           Norma PN-ISO 9836 stanowi, że powierzchnia pod trwałymi ścianami działowymi to
           powierzchnia <strong>konstrukcji, nie użytkowa</strong>. Część deweloperów mimo to
@@ -225,7 +229,9 @@
         </div>
       </details>
       <details>
-        <summary>Czy każdemu należy się zwrot?</summary>
+        <summary class="plausible-event-name=FAQ plausible-event-pytanie=komu-zwrot">
+          Czy każdemu należy się zwrot?
+        </summary>
         <div class="a">
           <strong>Nie — i nie uwierz nikomu, kto twierdzi inaczej.</strong>
           Orzecznictwo nie jest jednolite: kluczowe jest, czy deweloper jasno poinformował Cię o
@@ -234,7 +240,9 @@
         </div>
       </details>
       <details>
-        <summary>Ile mam czasu?</summary>
+        <summary class="plausible-event-name=FAQ plausible-event-pytanie=czas">
+          Ile mam czasu?
+        </summary>
         <div class="a">
           Roszczenia konsumenta przedawniają się co do zasady <strong>po 6 latach</strong>, z
           końcem roku kalendarzowego. Jeśli kupiłeś mieszkanie w 2020 r., czas może upłynąć z
@@ -242,7 +250,9 @@
         </div>
       </details>
       <details>
-        <summary>Ile to kosztuje?</summary>
+        <summary class="plausible-event-name=FAQ plausible-event-pytanie=koszt">
+          Ile to kosztuje?
+        </summary>
         <div class="a">
           Analiza umowy jest <strong>bezpłatna</strong>. Jeśli sprawa rokuje i zdecydujesz się ją
           prowadzić, warunki finansowe przedstawi Ci kancelaria przed podpisaniem czegokolwiek —
@@ -399,7 +409,7 @@
           </label>
           <.field_error field={@form[:consent_law_firm]} />
 
-          <button type="submit" class="btn" id="submitBtn">
+          <button type="submit" class="btn plausible-event-name=Zgloszenie" id="submitBtn">
             Wyślij zgłoszenie — analiza bezpłatna
           </button>
         </.form>

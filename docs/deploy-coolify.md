@@ -57,7 +57,38 @@ Make sure the branch you want to deploy (e.g. `main`) is pushed and includes the
 4. Ecto expects the `ecto://` scheme. It accepts `postgres://` too, but to be safe use:
    `ecto://<user>:<pass>@<internal-host>:5432/<db>` for `DATABASE_URL`.
 
-> Managed external DB (Neon/Supabase/RDS) instead? Same idea, but you'll likely need
+> ⚠️ **The database must exist before the app deploys.** The Elixir release runs
+> migrations (`bin/migrate`) but **cannot create the database** — `mix ecto.create` isn't
+> available in a release. The release only creates *tables*, not the database itself.
+
+### Creating the database by hand (SQL)
+
+Coolify's PostgreSQL resource ships with one admin user + one default database, but if you
+need a specific database (or a dedicated app user), create it yourself:
+
+1. Open a `psql` shell as the **superuser**. Either:
+   - Coolify → the Postgres resource → **Terminal**, then `psql -U postgres`, **or**
+   - SSH to the server: `docker exec -it <postgres-container> psql -U postgres`
+     (find the container with `docker ps | grep postgres`).
+2. Run:
+
+   ```sql
+   CREATE DATABASE meters;
+
+   -- optional: a dedicated, least-privilege app user instead of the superuser
+   CREATE USER meters_app WITH PASSWORD 'a-strong-password';
+   GRANT ALL PRIVILEGES ON DATABASE meters TO meters_app;
+
+   -- Postgres 15+: also grant on the public schema, or migrations fail with
+   -- "permission denied for schema public"
+   \c meters
+   GRANT ALL ON SCHEMA public TO meters_app;
+   ```
+
+3. Point `DATABASE_URL` at exactly this database/user (step 5), e.g.
+   `ecto://meters_app:a-strong-password@<internal-host>:5432/meters`.
+
+> External managed DB (Neon/Supabase/RDS)? Same `CREATE DATABASE`, and you'll likely need
 > SSL — see the SSL note in step 5.
 
 ---
@@ -185,6 +216,15 @@ Let's Encrypt couldn't complete the **HTTP-01 ACME challenge**. Checklist:
 - Then **redeploy** / use Coolify’s “regenerate certificate”, and check the **proxy logs**
   (Coolify → Server → Proxy → Logs) for ACME errors.
 
+> **Most common trigger (happened here):** the domain was added / app deployed **before the
+> A record existed**, so Traefik's first ACME attempt failed and it fell back to the default
+> cert — and it does **not** retry on its own once DNS goes live. Symptom: the app actually
+> works (`curl -k https://…` returns 200 / your page) but the cert issuer is
+> `CN=TRAEFIK DEFAULT CERT`.
+> **Fix:** add the A record → wait until `dig +short martwemetry.pl` returns the server IP →
+> then **force a re-issue**: Coolify → app → **Redeploy**, or **Servers → Proxy → Restart**.
+> Verify: `echo | openssl s_client -connect martwemetry.pl:443 -servername martwemetry.pl 2>/dev/null | openssl x509 -noout -issuer` should show **Let's Encrypt**, not the default cert.
+
 ### C. Cert works for apex but not `www` (or vice-versa)
 Issue a cert for **both** hostnames, or redirect one to the other.
 - In Coolify **Domains**, add both `https://martwemetry.pl` and `https://www.martwemetry.pl`
@@ -280,6 +320,56 @@ each app in its own container and the proxy routes by **domain**. Things that ma
   make sure there's enough RAM/swap. Runtime memory is modest, but budget for concurrent builds.
 - **One shared proxy.** A single Traefik/Caddy terminates TLS for all apps — a proxy-wide
   problem (see 7a) can affect every site, but cert issuance/renewal is still per-domain.
+
+---
+
+## 11. Analytics — Plausible (first-party proxy)
+
+We serve Plausible **through our own domain** so ad/tracker blockers don't drop it. The
+tracking script is served from `/js/stats.js` and events are forwarded from `/api/event`
+to the shared self-hosted Plausible instance (`plausible.przetargowyprzeglad.pl`). Same
+setup as the `przetargowi` project.
+
+**In this repo (already wired):**
+- `lib/meters_web/controllers/analytics_controller.ex` — `script/2` fetches + caches
+  (1h in `:persistent_term`) the **extended** Plausible script
+  (`script.outbound-links.tagged-events.js`); `event/2` proxies POSTs to Plausible's
+  `/api/event`, forwarding `user-agent` + client IP (`x-forwarded-for`).
+  - **outbound-links**: outbound link clicks are auto-tracked, no markup needed.
+  - **tagged-events**: custom events via a class (`+` becomes a space). Currently tagged in
+    `home.html.heex`:
+    - `CTA Kalkulator` — calculator CTA button
+    - `Zgloszenie` — form submit button (the lead conversion)
+    - `FAQ` — each FAQ, with a `pytanie` property (`problem` / `komu-zwrot` / `czas` / `koszt`)
+    - (`hash` is omitted — this is a multi-page site, not a SPA.)
+  - **In Plausible you must create the goals** to see these: Site Settings → **Goals → Add
+    goal → Custom event**, named exactly `CTA Kalkulator`, `Zgloszenie`, `FAQ`. To break the
+    `FAQ` goal down by question, add `pytanie` under **Custom Properties**.
+- `router.ex` — a **pipeline-less** scope (so `POST /api/event` skips CSRF):
+
+  ```elixir
+  scope "/", MetersWeb do
+    get "/js/stats.js", AnalyticsController, :script
+    post "/api/event", AnalyticsController, :event
+  end
+  ```
+- `root.html.heex` head:
+
+  ```heex
+  <script defer data-domain="martwemetry.pl" data-api="/api/event" src="/js/stats.js"></script>
+  ```
+
+**Deploy-time step (do this once):** in the **Plausible dashboard** (the shared instance),
+**add the website `martwemetry.pl`** — otherwise Plausible rejects events for an unknown
+site and you'll see nothing. No Coolify change is needed; the proxy calls Plausible
+server-side over HTTPS.
+
+**Verify:** `curl -s https://martwemetry.pl/js/stats.js | head -c 60` returns JS, then load
+the site and confirm a visit appears in the Plausible dashboard.
+
+**Reusing for a new app:** copy `analytics_controller.ex` (change `@site_domain`), add the
+two routes in a pipeline-less scope, add the `<script>` tag with the right `data-domain`,
+and register the new site in the Plausible dashboard.
 
 ---
 
