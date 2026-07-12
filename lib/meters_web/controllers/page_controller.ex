@@ -33,6 +33,17 @@ defmodule MetersWeb.PageController do
     end
   end
 
+  def privacy(conn, _params) do
+    conn
+    |> assign(:page_title, "Polityka prywatności")
+    |> assign(
+      :meta_description,
+      "Polityka prywatności i informacja o przetwarzaniu danych osobowych."
+    )
+    |> assign(:canonical_url, url(~p"/polityka-prywatnosci"))
+    |> render(:privacy)
+  end
+
   @doc false
   def sitemap(conn, _params) do
     body = """
@@ -42,6 +53,11 @@ defmodule MetersWeb.PageController do
         <loc>#{url(~p"/")}</loc>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
+      </url>
+      <url>
+        <loc>#{url(~p"/polityka-prywatnosci")}</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
       </url>
     </urlset>
     """

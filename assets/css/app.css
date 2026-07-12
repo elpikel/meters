@@ -243,6 +243,16 @@ footer{
   font-size:12.5px;color:var(--ink-soft);
 }
 footer p{margin-bottom:8px;max-width:64ch}
+footer a{color:var(--ink);text-decoration:underline}
+
+/* ===== LEGAL / privacy page ===== */
+.legal{margin-top:22px;max-width:64ch}
+.legal h2{font-size:18px;margin-top:28px;margin-bottom:6px}
+.legal p{margin-bottom:12px;color:var(--ink-soft);font-size:15px}
+.legal p strong{color:var(--ink)}
+.legal code{font-family:'IBM Plex Mono',monospace;font-size:13px;background:#fff;border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+.legal a{color:var(--ink);font-weight:600}
+.legal-back{margin-top:28px}
 
 /* hatch fade-in on load */
 .hatch-anim{animation:hatchIn 1.1s ease .3s both}

@@ -33,8 +33,8 @@ config :meters, Meters.Mailer, adapter: Swoosh.Adapters.Local
 
 # Where new-lead notification e-mails are sent. Override in runtime.exs for prod.
 config :meters, Meters.Leads.LeadNotifier,
-  to: "kontakt@martwemetry.pl",
-  from: {"Martwe Metry", "noreply@martwemetry.pl"}
+  to: "el.pikel@gmail.com",
+  from: {"Martwe Metry", "kontakt@martwemetry.pl"}
 
 # Configure esbuild (the version is required)
 config :esbuild,

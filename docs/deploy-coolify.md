@@ -167,7 +167,7 @@ Edycja DNS**:
   the A record doesn't affect mail.
 - **Mailer records (step 8):** the email provider (Resend/SMTP) gives you **SPF, DKIM, and
   DMARC** `TXT` records — add them in this same home.pl DNS zone, or lead emails from
-  `noreply@martwemetry.pl` get marked as spam or rejected.
+  `kontakt@martwemetry.pl` get marked as spam or rejected.
 - **Lower the TTL** (e.g. 300s) before switching, then verify: `dig +short martwemetry.pl`
   must return the Coolify IP **before** Coolify can issue the SSL cert.
 - No nameserver change is needed as long as the domain uses home.pl's default DNS. Find the
@@ -246,40 +246,26 @@ load until the cert is valid.
 
 ---
 
-## 8. ⚠️ Configure a real mailer (required — the app emails on every lead)
+## 8. Mailer — Brevo (required env var)
 
-Out of the box the mailer uses `Swoosh.Adapters.Local`, which **does not send mail in
-production**. Since submitting the lead form triggers `LeadNotifier`, you must pick a
-provider before going live. Two zero-hassle options:
-
-**Option A — Resend (no new dependency; uses `Req`, already configured):**
-
-Add to `config/runtime.exs` inside the `if config_env() == :prod do` block:
+The app sends a styled HTML notification e-mail on every lead (`LeadNotifier`). It uses
+**Brevo** (`Swoosh.Adapters.Brevo`, via the `Req` API client already set in `config/prod.exs`),
+matching the `przetargowi` setup. This is wired in `config/runtime.exs`:
 
 ```elixir
 config :meters, Meters.Mailer,
-  adapter: Swoosh.Adapters.Resend,
-  api_key: System.get_env("RESEND_API_KEY")
+  adapter: Swoosh.Adapters.Brevo,
+  api_key: System.get_env("BREVO_API_KEY") || raise("BREVO_API_KEY missing")
 ```
 
-Then set env var `RESEND_API_KEY` in Coolify, and make sure the `from` domain in
-`config/config.exs` (`noreply@martwemetry.pl`) is verified in Resend.
+**Set `BREVO_API_KEY` in Coolify — it's required, the app refuses to boot without it**
+(so lead e-mails can never silently fail). Get the key from Brevo → SMTP & API → API Keys.
 
-**Option B — SMTP (any provider):** add `{:gen_smtp, "~> 1.2"}` to `mix.exs`, then in
-`config/runtime.exs`:
-
-```elixir
-config :meters, Meters.Mailer,
-  adapter: Swoosh.Adapters.SMTP,
-  relay: System.get_env("SMTP_HOST"),
-  username: System.get_env("SMTP_USERNAME"),
-  password: System.get_env("SMTP_PASSWORD"),
-  port: String.to_integer(System.get_env("SMTP_PORT") || "587"),
-  tls: :always
-```
-
-Recipient/sender addresses live in `config/config.exs`
-(`config :meters, Meters.Leads.LeadNotifier, to: ..., from: ...`).
+- Verify the sender domain / address in Brevo (the `from` is `kontakt@martwemetry.pl`, set in
+  `config/config.exs` under `Meters.Leads.LeadNotifier`), and add Brevo's **SPF/DKIM** records
+  to the home.pl DNS zone (step 7) so mail isn't marked as spam.
+- Recipient/sender addresses live in `config/config.exs`
+  (`config :meters, Meters.Leads.LeadNotifier, to: ..., from: ...`).
 
 ---
 
@@ -336,15 +322,18 @@ setup as the `przetargowi` project.
   (`script.outbound-links.tagged-events.js`); `event/2` proxies POSTs to Plausible's
   `/api/event`, forwarding `user-agent` + client IP (`x-forwarded-for`).
   - **outbound-links**: outbound link clicks are auto-tracked, no markup needed.
-  - **tagged-events**: custom events via a class (`+` becomes a space). Currently tagged in
-    `home.html.heex`:
+  - **tagged-events** (clicks, via a class — `+` becomes a space) tagged in `home.html.heex`:
     - `CTA Kalkulator` — calculator CTA button
     - `Zgloszenie` — form submit button (the lead conversion)
     - `FAQ` — each FAQ, with a `pytanie` property (`problem` / `komu-zwrot` / `czas` / `koszt`)
+  - **programmatic events** (non-clicks, fired from `assets/js/landing.js` via `window.plausible`):
+    - `Kalkulator` — first interaction with the calculator sliders
+    - `Scroll Formularz` — the lead form scrolls into view (funnel mid-step)
     - (`hash` is omitted — this is a multi-page site, not a SPA.)
   - **In Plausible you must create the goals** to see these: Site Settings → **Goals → Add
-    goal → Custom event**, named exactly `CTA Kalkulator`, `Zgloszenie`, `FAQ`. To break the
-    `FAQ` goal down by question, add `pytanie` under **Custom Properties**.
+    goal → Custom event**, named exactly `CTA Kalkulator`, `Zgloszenie`, `Kalkulator`,
+    `Scroll Formularz`, `FAQ` (and `Outbound Link: Click`). To break the `FAQ` goal down by
+    question, add `pytanie` under **Custom Properties**.
 - `router.ex` — a **pipeline-less** scope (so `POST /api/event` skips CSRF):
 
   ```elixir

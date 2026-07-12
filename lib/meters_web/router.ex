@@ -19,6 +19,7 @@ defmodule MetersWeb.Router do
 
     get "/", PageController, :home
     post "/leads", PageController, :create
+    get "/polityka-prywatnosci", PageController, :privacy
     get "/sitemap.xml", PageController, :sitemap
   end
 

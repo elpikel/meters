@@ -47,6 +47,27 @@ defmodule MetersWeb.PageControllerTest do
       assert html =~ ~s(type="application/ld+json")
       assert html =~ ~s("@type":"FAQPage")
     end
+
+    test "wires up the analytics script and tagged conversion events", %{conn: conn} do
+      html = conn |> get(~p"/") |> html_response(200)
+
+      # first-party Plausible proxy script tag
+      assert html =~ ~s(src="/js/stats.js")
+      # click-tagged events (the programmatic Kalkulator/Scroll events live in landing.js)
+      assert html =~ "plausible-event-name=Zgloszenie"
+      assert html =~ "plausible-event-name=CTA+Kalkulator"
+      assert html =~ "plausible-event-name=FAQ"
+    end
+  end
+
+  describe "GET /polityka-prywatnosci" do
+    test "renders the privacy policy page", %{conn: conn} do
+      html = conn |> get(~p"/polityka-prywatnosci") |> html_response(200)
+
+      assert html =~ "Polityka prywatności"
+      assert html =~ "Administrator danych"
+      assert html =~ ~s(rel="canonical")
+    end
   end
 
   describe "GET /sitemap.xml" do

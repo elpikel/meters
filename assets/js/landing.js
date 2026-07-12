@@ -1,6 +1,21 @@
 // Landing page interactivity: the overpayment calculator and lead-source capture.
 // Pure client-side — no server round-trips needed for the sliders.
 
+// Plausible queue stub: analytics loads async, so queue events fired before it's ready.
+window.plausible =
+  window.plausible ||
+  function () {
+    ;(window.plausible.q = window.plausible.q || []).push(arguments)
+  }
+
+// Fire a Plausible custom event at most once per page load.
+function trackOnce(name) {
+  trackOnce.fired = trackOnce.fired || {}
+  if (trackOnce.fired[name]) return
+  trackOnce.fired[name] = true
+  window.plausible(name)
+}
+
 function initLanding() {
   const cena = document.getElementById("cena")
   const metry = document.getElementById("metry")
@@ -29,8 +44,29 @@ function initLanding() {
   }
 
   if (cena && metry) {
-    ;[cena, metry].forEach((el) => el.addEventListener("input", recalc))
+    ;[cena, metry].forEach((el) => {
+      el.addEventListener("input", recalc)
+      // Track calculator interaction once (sliders aren't clicks, so tagged-events miss them)
+      el.addEventListener("input", () => trackOnce("Kalkulator"), { once: true })
+    })
     recalc()
+  }
+
+  // Track when the visitor scrolls the lead form into view (funnel mid-step).
+  const formSection = document.getElementById("zgloszenie")
+  if (formSection && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trackOnce("Scroll Formularz")
+            observer.disconnect()
+          }
+        })
+      },
+      { threshold: 0.3 }
+    )
+    observer.observe(formSection)
   }
 
   // Capture where the lead came from (utm_source or referrer) for the hidden field.

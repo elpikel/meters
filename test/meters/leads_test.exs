@@ -33,9 +33,13 @@ defmodule Meters.LeadsTest do
       assert {:ok, lead} = Leads.create_lead(@valid_attrs)
 
       assert_email_sent(fn email ->
-        assert email.to == [{"", "kontakt@martwemetry.pl"}]
+        assert email.to == [{"", "el.pikel@gmail.com"}]
         assert email.subject =~ lead.name
         assert email.text_body =~ lead.email
+        # HTML body styled to match the landing page (inline CSS)
+        assert email.html_body =~ lead.name
+        assert email.html_body =~ ~s(style=")
+        assert email.html_body =~ "Szacowana nadpłata"
       end)
     end
 
