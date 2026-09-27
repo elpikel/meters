@@ -32,6 +32,9 @@ config :meters, MetersWeb.Endpoint,
 config :meters, Meters.Mailer, adapter: Swoosh.Adapters.Local
 
 # Where new-lead notification e-mails are sent. Override in runtime.exs for prod.
+# Currently kept on the owner's inbox for verification on prod before switching
+# to the kancelaria inbox (kkadwokaci.gda@gmail.com — the address the
+# kraluk_kurkierewicz contact form delivers to).
 config :meters, Meters.Leads.LeadNotifier,
   to: "el.pikel@gmail.com",
   from: {"Martwe Metry", "kontakt@martwemetry.pl"}

@@ -45,6 +45,29 @@ defmodule MetersWeb.PageHTML do
         "url" => base <> "/"
       },
       %{
+        "@type" => "LegalService",
+        "@id" => "https://kkadwokat.pl/#organization",
+        "name" => "Kraluk Kurkierewicz Adwokacka Spółka Partnerska",
+        "url" => "https://kkadwokat.pl/",
+        "sameAs" => "https://kkadwokat.pl/",
+        "areaServed" => %{"@type" => "Country", "name" => "Polska"},
+        "address" => %{
+          "@type" => "PostalAddress",
+          "streetAddress" => "ul. Strzelecka 7B",
+          "postalCode" => "80-803",
+          "addressLocality" => "Gdańsk",
+          "addressCountry" => "PL"
+        }
+      },
+      %{
+        "@type" => "Service",
+        "@id" => base <> "/#analiza-umowy",
+        "name" => "Bezpłatna analiza umowy deweloperskiej — metry pod ścianami działowymi",
+        "serviceType" => "Analiza prawna umowy deweloperskiej",
+        "areaServed" => %{"@type" => "Country", "name" => "Polska"},
+        "provider" => %{"@id" => "https://kkadwokat.pl/#organization"}
+      },
+      %{
         "@type" => "FAQPage",
         "@id" => base <> "/#faq",
         "mainEntity" =>
