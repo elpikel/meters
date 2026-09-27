@@ -8,29 +8,34 @@ defmodule MetersWeb.PageController do
   @page_title "Sprawdź, czy deweloper doliczył Ci metry pod ścianami"
   @meta_description "Deweloperzy doliczali do ceny mieszkania powierzchnię pod ścianami działowymi. Sprawdź w 2 minuty, ile mogłeś nadpłacić — bezpłatna analiza umowy."
 
-  def home(conn, params) do
+  def home(conn, _params) do
     conn
     |> assign_seo()
-    |> assign(:sent?, params["sent"] == "true")
     |> assign(:form, to_form(Leads.change_lead()))
     |> render(:home)
   end
 
+  # The form submits via fetch (see landing.js), so this responds with JSON and
+  # never redirects — the URL stays on "/" and the success box is toggled in the
+  # page. On failure it returns per-field errors for inline display.
   def create(conn, %{"lead" => lead_params}) do
     lead_params = Map.put(lead_params, "source", source(conn, lead_params))
 
     case Leads.create_lead(lead_params) do
       {:ok, _lead} ->
-        redirect(conn, to: ~p"/?sent=true#zgloszenie")
+        json(conn, %{status: "ok"})
 
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> assign_seo()
-        |> assign(:sent?, false)
-        |> assign(:form, to_form(changeset))
-        |> render(:home)
+        |> json(%{status: "error", errors: error_map(changeset)})
     end
+  end
+
+  # Changeset errors as %{field => [messages]}, translated the same way the
+  # inline <.field_error> component renders them.
+  defp error_map(changeset) do
+    Ecto.Changeset.traverse_errors(changeset, &MetersWeb.CoreComponents.translate_error/1)
   end
 
   def privacy(conn, _params) do

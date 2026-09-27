@@ -228,8 +228,14 @@ details .a strong{color:var(--ink)}
 }
 .field-err{color:var(--hatch);font-size:13px;margin-top:6px;font-weight:600}
 .success{
-  text-align:center;padding:34px 20px;
+  text-align:center;padding:34px 20px;position:relative;
 }
+.success-close{
+  position:absolute;top:12px;right:12px;width:32px;height:32px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;color:var(--ink-soft);background:transparent;border:0;cursor:pointer;
+}
+.success-close:hover{color:var(--ink)}
 .success .tick{
   width:64px;height:64px;margin:0 auto 14px;border-radius:50%;
   background:var(--ok);color:#fff;font-size:34px;

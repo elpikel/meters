@@ -47,18 +47,20 @@ defmodule Meters.Leads.Lead do
       :consent_contact,
       :consent_law_firm
     ])
-    |> validate_required([:name, :phone, :email])
-    |> validate_length(:name, max: 120)
-    |> validate_length(:developer, max: 160)
-    |> validate_length(:investment, max: 160)
+    |> validate_required([:name, :phone, :email], message: "To pole jest wymagane")
+    |> validate_length(:name, max: 120, message: "Maksymalnie %{count} znaków")
+    |> validate_length(:developer, max: 160, message: "Maksymalnie %{count} znaków")
+    |> validate_length(:investment, max: 160, message: "Maksymalnie %{count} znaków")
     |> validate_format(:email, ~r/^[^@\s]+@[^@\s]+\.[^@\s]+$/,
-      message: "podaj poprawny adres e-mail"
+      message: "Podaj poprawny adres e-mail"
     )
-    |> validate_format(:phone, ~r/^[0-9+\s()-]{6,20}$/, message: "podaj poprawny numer telefonu")
-    |> validate_inclusion(:purchase_year, @purchase_years)
-    |> validate_inclusion(:settlement_area, ["nie wiem" | @settlement_area_values])
-    |> validate_acceptance(:consent_contact, message: "zgoda jest wymagana")
-    |> validate_acceptance(:consent_law_firm, message: "zgoda jest wymagana")
+    |> validate_format(:phone, ~r/^[0-9+\s()-]{6,20}$/, message: "Podaj poprawny numer telefonu")
+    |> validate_inclusion(:purchase_year, @purchase_years, message: "Wybierz wartość z listy")
+    |> validate_inclusion(:settlement_area, ["nie wiem" | @settlement_area_values],
+      message: "Nieprawidłowa wartość"
+    )
+    |> validate_acceptance(:consent_contact, message: "Zgoda jest wymagana")
+    |> validate_acceptance(:consent_law_firm, message: "Zgoda jest wymagana")
   end
 
   @doc "Allowed values for the year-of-purchase select."

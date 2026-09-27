@@ -283,162 +283,163 @@
     <p class="sub">Wypełnij, a skontaktujemy się w ciągu 2 dni roboczych.</p>
 
     <div class="calc">
-      <%= if @sent? do %>
-        <div class="success" id="successBox" style="display:block">
-          <div class="tick">✓</div>
-          <h3>Zgłoszenie wysłane</h3>
-          <p>
-            Skontaktujemy się w ciągu 2 dni roboczych. Warto już teraz odszukać umowę
-            deweloperską i rzut lokalu — przyspieszy to analizę.
-          </p>
+      <div class="success" id="successBox" style="display:none" role="status" aria-live="polite">
+        <button type="button" class="success-close" id="successClose" aria-label="Zamknij">
+          ×
+        </button>
+        <div class="tick">✓</div>
+        <h3>Zgłoszenie wysłane</h3>
+        <p>
+          Skontaktujemy się w ciągu 2 dni roboczych. Warto już teraz odszukać umowę
+          deweloperską i rzut lokalu — przyspieszy to analizę.
+        </p>
+      </div>
+
+      <.form for={@form} action={~p"/leads"} method="post" id="leadForm">
+        <input
+          type="hidden"
+          name="lead[contract_price_per_m2]"
+          id="price-field"
+          value={@form[:contract_price_per_m2].value}
+        />
+        <input
+          type="hidden"
+          name="lead[wall_area_m2]"
+          id="wall-field"
+          value={@form[:wall_area_m2].value}
+        />
+        <input
+          type="hidden"
+          name="lead[estimated_overpayment]"
+          id="estimate-field"
+          value={@form[:estimated_overpayment].value}
+        />
+        <input
+          type="hidden"
+          name="lead[source]"
+          id="source-field"
+          value={@form[:source].value}
+        />
+
+        <div class="grid2">
+          <div class="field">
+            <label for="imie">Imię</label>
+            <input
+              type="text"
+              id="imie"
+              name="lead[name]"
+              value={@form[:name].value}
+              autocomplete="given-name"
+              required
+            />
+            <.field_error field={@form[:name]} />
+          </div>
+          <div class="field">
+            <label for="tel">Telefon</label>
+            <input
+              type="tel"
+              id="tel"
+              name="lead[phone]"
+              value={@form[:phone].value}
+              autocomplete="tel"
+              inputmode="tel"
+              required
+            />
+            <.field_error field={@form[:phone]} />
+          </div>
         </div>
-      <% else %>
-        <.form for={@form} action={~p"/leads"} method="post" id="leadForm">
-          <input
-            type="hidden"
-            name="lead[contract_price_per_m2]"
-            id="price-field"
-            value={@form[:contract_price_per_m2].value}
-          />
-          <input
-            type="hidden"
-            name="lead[wall_area_m2]"
-            id="wall-field"
-            value={@form[:wall_area_m2].value}
-          />
-          <input
-            type="hidden"
-            name="lead[estimated_overpayment]"
-            id="estimate-field"
-            value={@form[:estimated_overpayment].value}
-          />
-          <input
-            type="hidden"
-            name="lead[source]"
-            id="source-field"
-            value={@form[:source].value}
-          />
 
-          <div class="grid2">
-            <div class="field">
-              <label for="imie">Imię</label>
-              <input
-                type="text"
-                id="imie"
-                name="lead[name]"
-                value={@form[:name].value}
-                autocomplete="given-name"
-                required
-              />
-              <.field_error field={@form[:name]} />
-            </div>
-            <div class="field">
-              <label for="tel">Telefon</label>
-              <input
-                type="tel"
-                id="tel"
-                name="lead[phone]"
-                value={@form[:phone].value}
-                autocomplete="tel"
-                inputmode="tel"
-                required
-              />
-              <.field_error field={@form[:phone]} />
-            </div>
-          </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            name="lead[email]"
+            value={@form[:email].value}
+            autocomplete="email"
+            required
+          />
+          <.field_error field={@form[:email]} />
+        </div>
 
+        <div class="grid2">
           <div class="field">
-            <label for="email">E-mail</label>
+            <label for="dew">Deweloper</label>
             <input
-              type="email"
-              id="email"
-              name="lead[email]"
-              value={@form[:email].value}
-              autocomplete="email"
-              required
+              type="text"
+              id="dew"
+              name="lead[developer]"
+              value={@form[:developer].value}
+              placeholder="np. XYZ Development"
             />
-            <.field_error field={@form[:email]} />
+            <.field_error field={@form[:developer]} />
           </div>
-
-          <div class="grid2">
-            <div class="field">
-              <label for="dew">Deweloper</label>
-              <input
-                type="text"
-                id="dew"
-                name="lead[developer]"
-                value={@form[:developer].value}
-                placeholder="np. XYZ Development"
-              />
-              <.field_error field={@form[:developer]} />
-            </div>
-            <div class="field">
-              <label for="inw">Inwestycja / osiedle</label>
-              <input
-                type="text"
-                id="inw"
-                name="lead[investment]"
-                value={@form[:investment].value}
-                placeholder="np. Osiedle Zielone Tarasy"
-              />
-              <.field_error field={@form[:investment]} />
-            </div>
-          </div>
-
           <div class="field">
-            <label for="rok">Rok zakupu</label>
-            <select id="rok" name="lead[purchase_year]">
-              <option value="" disabled selected={@form[:purchase_year].value in [nil, ""]}>
-                Wybierz…
-              </option>
-              {Phoenix.HTML.Form.options_for_select(
-                Meters.Leads.Lead.purchase_years(),
-                @form[:purchase_year].value
-              )}
-            </select>
-            <.field_error field={@form[:purchase_year]} />
+            <label for="inw">Inwestycja / osiedle</label>
+            <input
+              type="text"
+              id="inw"
+              name="lead[investment]"
+              value={@form[:investment].value}
+              placeholder="np. Osiedle Zielone Tarasy"
+            />
+            <.field_error field={@form[:investment]} />
           </div>
+        </div>
 
-          <label class="consent">
-            <input type="hidden" name="lead[consent_contact]" value="false" />
-            <input
-              type="checkbox"
-              id="rodo1"
-              name="lead[consent_contact]"
-              value="true"
-              checked={@form[:consent_contact].value in [true, "true"]}
-              required
-            />
-            <span>
-              Wyrażam zgodę na przetwarzanie moich danych osobowych w celu kontaktu i wstępnej
-              oceny sprawy, zgodnie z <.link href={~p"/polityka-prywatnosci"}>polityką prywatności</.link>.
-              <strong>(wymagane)</strong>
-            </span>
-          </label>
-          <.field_error field={@form[:consent_contact]} />
+        <div class="field">
+          <label for="rok">Rok zakupu</label>
+          <select id="rok" name="lead[purchase_year]">
+            <option value="" disabled selected={@form[:purchase_year].value in [nil, ""]}>
+              Wybierz…
+            </option>
+            {Phoenix.HTML.Form.options_for_select(
+              Meters.Leads.Lead.purchase_years(),
+              @form[:purchase_year].value
+            )}
+          </select>
+          <.field_error field={@form[:purchase_year]} />
+        </div>
 
-          <label class="consent">
-            <input type="hidden" name="lead[consent_law_firm]" value="false" />
-            <input
-              type="checkbox"
-              id="rodo2"
-              name="lead[consent_law_firm]"
-              value="true"
-              checked={@form[:consent_law_firm].value in [true, "true"]}
-              required
-            />
-            <span>
-              Wyrażam zgodę na przekazanie moich danych współpracującej kancelarii prawnej w celu
-              bezpłatnej analizy dokumentów. <strong>(wymagane)</strong>
-            </span>
-          </label>
-          <.field_error field={@form[:consent_law_firm]} />
+        <label class="consent">
+          <input type="hidden" name="lead[consent_contact]" value="false" />
+          <input
+            type="checkbox"
+            id="rodo1"
+            name="lead[consent_contact]"
+            value="true"
+            checked={@form[:consent_contact].value in [true, "true"]}
+            required
+          />
+          <span>
+            Wyrażam zgodę na przetwarzanie moich danych osobowych w celu kontaktu i wstępnej
+            oceny sprawy, zgodnie z <.link href={~p"/polityka-prywatnosci"}>polityką prywatności</.link>.
+            <strong>(wymagane)</strong>
+          </span>
+        </label>
+        <.field_error field={@form[:consent_contact]} />
 
-          <button type="submit" class="btn plausible-event-name=Zgloszenie" id="submitBtn">
-            Wyślij zgłoszenie — analiza bezpłatna
-          </button>
-        </.form>
-      <% end %>
+        <label class="consent">
+          <input type="hidden" name="lead[consent_law_firm]" value="false" />
+          <input
+            type="checkbox"
+            id="rodo2"
+            name="lead[consent_law_firm]"
+            value="true"
+            checked={@form[:consent_law_firm].value in [true, "true"]}
+            required
+          />
+          <span>
+            Wyrażam zgodę na przekazanie moich danych współpracującej kancelarii prawnej w celu
+            bezpłatnej analizy dokumentów. <strong>(wymagane)</strong>
+          </span>
+        </label>
+        <.field_error field={@form[:consent_law_firm]} />
+
+        <button type="submit" class="btn plausible-event-name=Zgloszenie" id="submitBtn">
+          Wyślij zgłoszenie — analiza bezpłatna
+        </button>
+      </.form>
     </div>
   </section>
 </main>
