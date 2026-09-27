@@ -53,7 +53,20 @@ defmodule Meters.Leads.LeadNotifier do
         {"Cena za m² z umowy", lead.contract_price_per_m2},
         {"Metry pod ścianami działowymi", lead.wall_area_m2}
       ]
+      |> Enum.filter(fn {_label, value} -> present?(value) end)
       |> Enum.map_join("", fn {label, value} -> field_row(label, value) end)
+
+    # Developer / investment subline — only the parts the lead actually filled in.
+    subline =
+      case Enum.filter([lead.developer, lead.investment], &present?/1) do
+        [] ->
+          ""
+
+        parts ->
+          text = Enum.map_join(parts, " &mdash; ", &esc/1)
+
+          ~s(<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#4A4E57;margin-top:4px;">#{text}</div>)
+      end
 
     """
     <!DOCTYPE html>
@@ -75,7 +88,7 @@ defmodule Meters.Leads.LeadNotifier do
                 <tr>
                   <td style="padding:20px 20px 4px 20px;">
                     <div style="font-family:Arial,Helvetica,sans-serif;font-weight:800;font-size:22px;color:#191C21;line-height:1.2;">#{esc(lead.name)}</div>
-                    <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#4A4E57;margin-top:4px;">#{esc(lead.developer)} &mdash; #{esc(lead.investment)}</div>
+                    #{subline}
                   </td>
                 </tr>
                 <tr>
@@ -122,24 +135,37 @@ defmodule Meters.Leads.LeadNotifier do
   defp esc(value), do: value |> to_string() |> Plug.HTML.html_escape()
 
   defp text_body(%Lead{} = lead) do
+    # Only include lines the lead actually filled in — skip blank optional fields.
+    fields =
+      [
+        {"Imię", lead.name},
+        {"Telefon", lead.phone},
+        {"E-mail", lead.email},
+        {"Deweloper", lead.developer},
+        {"Inwestycja", lead.investment},
+        {"Rok zakupu", lead.purchase_year},
+        {"Cena za m²", lead.contract_price_per_m2},
+        {"Metry pod ścianami", lead.wall_area_m2},
+        {"Szacunek nadpłaty", lead.estimated_overpayment}
+      ]
+      |> Enum.filter(fn {_label, value} -> present?(value) end)
+      |> Enum.map_join("\n", fn {label, value} ->
+        String.pad_trailing("#{label}:", 20) <> to_string(value)
+      end)
+
     """
     Nowe zgłoszenie z formularza analizy umowy.
 
-    Imię:                #{lead.name}
-    Telefon:             #{lead.phone}
-    E-mail:              #{lead.email}
-    Deweloper:           #{lead.developer}
-    Inwestycja:          #{lead.investment}
-    Rok zakupu:          #{lead.purchase_year}
-    Cena za m²:          #{lead.contract_price_per_m2 || "—"}
-    Metry pod ścianami:  #{lead.wall_area_m2 || "—"}
-    Szacunek nadpłaty:   #{lead.estimated_overpayment || "—"}
+    #{fields}
 
     Zgody:
     - kontakt:           #{yes_no(lead.consent_contact)}
     - kancelaria:        #{yes_no(lead.consent_law_firm)}
     """
   end
+
+  defp present?(nil), do: false
+  defp present?(value), do: String.trim(to_string(value)) != ""
 
   defp yes_no(true), do: "tak"
   defp yes_no(_), do: "nie"

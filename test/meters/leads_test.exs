@@ -43,6 +43,45 @@ defmodule Meters.LeadsTest do
       end)
     end
 
+    test "includes the calculator values and filled-in optional fields in the e-mail" do
+      attrs =
+        Map.merge(@valid_attrs, %{
+          "contract_price_per_m2" => "11 000 zł",
+          "wall_area_m2" => "2,5 m²"
+        })
+
+      assert {:ok, _lead} = Leads.create_lead(attrs)
+
+      assert_email_sent(fn email ->
+        assert email.html_body =~ "Cena za m"
+        assert email.html_body =~ "11 000 zł"
+        assert email.html_body =~ "2,5 m²"
+        assert email.text_body =~ "Deweloper:"
+        assert email.text_body =~ "XYZ Development"
+      end)
+    end
+
+    test "omits blank optional fields from the e-mail (no dash placeholders)" do
+      attrs =
+        @valid_attrs
+        |> Map.drop(["developer", "investment", "purchase_year"])
+        |> Map.merge(%{"contract_price_per_m2" => "11 000 zł", "wall_area_m2" => "2,5 m²"})
+
+      assert {:ok, _lead} = Leads.create_lead(attrs)
+
+      assert_email_sent(fn email ->
+        # Blank optionals disappear entirely — no labels and no "—"/"&mdash;".
+        refute email.text_body =~ "Deweloper:"
+        refute email.text_body =~ "Inwestycja:"
+        refute email.text_body =~ "Rok zakupu:"
+        refute email.html_body =~ "&mdash;"
+        refute email.html_body =~ ">—<"
+        # Filled-in fields still render.
+        assert email.text_body =~ "11 000 zł"
+        assert email.html_body =~ "2,5 m²"
+      end)
+    end
+
     test "requires the mandatory fields" do
       assert {:error, changeset} = Leads.create_lead(%{})
 
