@@ -50,9 +50,10 @@ defmodule Meters.LeadsTest do
       assert errors.name
       assert errors.phone
       assert errors.email
-      assert errors.developer
-      assert errors.investment
-      assert errors.purchase_year
+      # developer, investment and purchase_year are optional
+      refute Map.has_key?(errors, :developer)
+      refute Map.has_key?(errors, :investment)
+      refute Map.has_key?(errors, :purchase_year)
     end
 
     test "requires both consents to be accepted" do

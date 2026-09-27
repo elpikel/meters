@@ -23,6 +23,8 @@ function initLanding() {
   const metryVal = document.getElementById("metry-val")
   const wynik = document.getElementById("wynik")
   const estimateField = document.getElementById("estimate-field")
+  const priceField = document.getElementById("price-field")
+  const wallField = document.getElementById("wall-field")
   const sourceField = document.getElementById("source-field")
 
   const fmt = (n) => n.toLocaleString("pl-PL") + " zł"
@@ -34,11 +36,15 @@ function initLanding() {
 
   const recalc = () => {
     if (!cena || !metry) return
-    cenaVal.textContent = fmt(+cena.value)
-    metryVal.textContent = (+metry.value).toLocaleString("pl-PL") + " m²"
+    const priceLabel = fmt(+cena.value)
+    const wallLabel = (+metry.value).toLocaleString("pl-PL") + " m²"
+    cenaVal.textContent = priceLabel
+    metryVal.textContent = wallLabel
     const result = fmt(Math.round(cena.value * metry.value))
     wynik.textContent = result
     if (estimateField) estimateField.value = result
+    if (priceField) priceField.value = priceLabel
+    if (wallField) wallField.value = wallLabel
     paintRange(cena)
     paintRange(metry)
   }

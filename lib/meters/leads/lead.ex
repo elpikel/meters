@@ -17,6 +17,8 @@ defmodule Meters.Leads.Lead do
     field :investment, :string
     field :purchase_year, :string
     field :settlement_area, :string, default: "nie wiem"
+    field :contract_price_per_m2, :string
+    field :wall_area_m2, :string
     field :estimated_overpayment, :string
     field :source, :string
     field :consent_contact, :boolean, default: false
@@ -38,12 +40,14 @@ defmodule Meters.Leads.Lead do
       :investment,
       :purchase_year,
       :settlement_area,
+      :contract_price_per_m2,
+      :wall_area_m2,
       :estimated_overpayment,
       :source,
       :consent_contact,
       :consent_law_firm
     ])
-    |> validate_required([:name, :phone, :email, :developer, :investment, :purchase_year])
+    |> validate_required([:name, :phone, :email])
     |> validate_length(:name, max: 120)
     |> validate_length(:developer, max: 160)
     |> validate_length(:investment, max: 160)

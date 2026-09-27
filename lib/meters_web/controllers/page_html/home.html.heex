@@ -194,11 +194,15 @@
         <div>
           <h3>Kancelaria bezpłatnie analizuje umowę</h3>
           <p>
-            Współpracująca <a
+            Współpracująca
+            <a
               href="https://kkadwokat.pl"
               target="_blank"
               rel="noopener"
-            >kancelaria adwokacka Kraluk Kurkierewicz</a> z Gdańska sprawdza umowę
+            >
+              kancelaria adwokacka Kraluk Kurkierewicz
+            </a>
+            z Gdańska sprawdza umowę
             deweloperską i rzut lokalu.
             <strong>Analiza nic nie kosztuje i do niczego nie zobowiązuje.</strong>
           </p>
@@ -292,6 +296,18 @@
         <.form for={@form} action={~p"/leads"} method="post" id="leadForm">
           <input
             type="hidden"
+            name="lead[contract_price_per_m2]"
+            id="price-field"
+            value={@form[:contract_price_per_m2].value}
+          />
+          <input
+            type="hidden"
+            name="lead[wall_area_m2]"
+            id="wall-field"
+            value={@form[:wall_area_m2].value}
+          />
+          <input
+            type="hidden"
             name="lead[estimated_overpayment]"
             id="estimate-field"
             value={@form[:estimated_overpayment].value}
@@ -353,7 +369,6 @@
                 name="lead[developer]"
                 value={@form[:developer].value}
                 placeholder="np. XYZ Development"
-                required
               />
               <.field_error field={@form[:developer]} />
             </div>
@@ -365,7 +380,6 @@
                 name="lead[investment]"
                 value={@form[:investment].value}
                 placeholder="np. Osiedle Zielone Tarasy"
-                required
               />
               <.field_error field={@form[:investment]} />
             </div>
@@ -373,7 +387,7 @@
 
           <div class="field">
             <label for="rok">Rok zakupu</label>
-            <select id="rok" name="lead[purchase_year]" required>
+            <select id="rok" name="lead[purchase_year]">
               <option value="" disabled selected={@form[:purchase_year].value in [nil, ""]}>
                 Wybierz…
               </option>

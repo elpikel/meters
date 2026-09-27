@@ -50,7 +50,8 @@ defmodule Meters.Leads.LeadNotifier do
         {"Telefon", lead.phone},
         {"E-mail", lead.email},
         {"Rok zakupu", lead.purchase_year},
-        {"Pow. rozliczeniowa", lead.settlement_area}
+        {"Cena za m² z umowy", lead.contract_price_per_m2},
+        {"Metry pod ścianami działowymi", lead.wall_area_m2}
       ]
       |> Enum.map_join("", fn {label, value} -> field_row(label, value) end)
 
@@ -99,12 +100,6 @@ defmodule Meters.Leads.LeadNotifier do
                     Zgody: kontakt <strong style="color:#2E7D4F;">#{yes_no(lead.consent_contact)}</strong> &bull; kancelaria <strong style="color:#2E7D4F;">#{yes_no(lead.consent_law_firm)}</strong>
                   </td>
                 </tr>
-                <tr>
-                  <td style="background-color:#F6F5F1;border-top:2px solid #191C21;padding:12px 20px;font-family:'Courier New',monospace;font-size:11px;color:#4A4E57;">
-                    Źródło: #{esc(lead.source || "—")}<br />
-                    Odpowiedz na tego maila, aby skontaktować się ze zgłaszającym.
-                  </td>
-                </tr>
               </table>
             </td>
           </tr>
@@ -136,9 +131,9 @@ defmodule Meters.Leads.LeadNotifier do
     Deweloper:           #{lead.developer}
     Inwestycja:          #{lead.investment}
     Rok zakupu:          #{lead.purchase_year}
-    Pow. rozliczeniowa:  #{lead.settlement_area}
+    Cena za m²:          #{lead.contract_price_per_m2 || "—"}
+    Metry pod ścianami:  #{lead.wall_area_m2 || "—"}
     Szacunek nadpłaty:   #{lead.estimated_overpayment || "—"}
-    Źródło:              #{lead.source || "—"}
 
     Zgody:
     - kontakt:           #{yes_no(lead.consent_contact)}
