@@ -265,7 +265,7 @@ footer{
   margin-top:56px;padding:26px 0 40px;border-top:2px solid var(--ink);
   font-size:12.5px;color:var(--ink-soft);
 }
-footer p{margin-bottom:8px;max-width:64ch}
+footer p{margin-bottom:8px}
 footer a{color:var(--ink);text-decoration:underline}
 
 /* ===== LEGAL / privacy page ===== */
