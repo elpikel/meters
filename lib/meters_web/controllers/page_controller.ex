@@ -38,6 +38,18 @@ defmodule MetersWeb.PageController do
     Ecto.Changeset.traverse_errors(changeset, &MetersWeb.CoreComponents.translate_error/1)
   end
 
+  @guide_title "Martwe metry w mieszkaniu — czy deweloper prawidłowo ustalił powierzchnię użytkową lokalu?"
+  @guide_description "Martwe metry to powierzchnia pod ścianami działowymi wliczona do metrażu mieszkania. Wyjaśniamy normę PN-ISO 9836, decyzje UOKiK, orzecznictwo sądów i nowe przepisy od 13 lutego 2026 r. — oraz kiedy nabywcy przysługuje zwrot części ceny."
+
+  def guide(conn, _params) do
+    conn
+    |> assign(:page_title, @guide_title)
+    |> assign(:meta_description, @guide_description)
+    |> assign(:canonical_url, url(~p"/martwe-metry-w-mieszkaniu"))
+    |> assign(:og_type, "article")
+    |> render(:guide)
+  end
+
   def privacy(conn, _params) do
     conn
     |> assign(:page_title, "Polityka prywatności")
@@ -49,21 +61,33 @@ defmodule MetersWeb.PageController do
     |> render(:privacy)
   end
 
+  # Bump when a page's content meaningfully changes so `lastmod` stays honest.
+  @sitemap_lastmod "2026-09-29"
+
   @doc false
   def sitemap(conn, _params) do
+    pages = [
+      {url(~p"/"), "weekly", "1.0"},
+      {url(~p"/martwe-metry-w-mieszkaniu"), "monthly", "0.8"},
+      {url(~p"/polityka-prywatnosci"), "yearly", "0.3"}
+    ]
+
+    entries =
+      Enum.map_join(pages, "\n", fn {loc, changefreq, priority} ->
+        """
+          <url>
+            <loc>#{loc}</loc>
+            <lastmod>#{@sitemap_lastmod}</lastmod>
+            <changefreq>#{changefreq}</changefreq>
+            <priority>#{priority}</priority>
+          </url>\
+        """
+      end)
+
     body = """
     <?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      <url>
-        <loc>#{url(~p"/")}</loc>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-      </url>
-      <url>
-        <loc>#{url(~p"/polityka-prywatnosci")}</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-      </url>
+    #{entries}
     </urlset>
     """
 

@@ -61,6 +61,23 @@ body{
 }
 
 header{padding:14px 0 0}
+
+/* ===== top navigation ===== */
+.topnav{padding:0;background:var(--paper);border-bottom:2px solid var(--ink);position:sticky;top:0;z-index:50}
+.topnav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:12px;padding-bottom:12px}
+.topnav-brand{font-family:'Archivo',sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.01em;color:var(--ink);text-decoration:none;white-space:nowrap}
+.topnav-links{display:flex;align-items:center;gap:20px}
+.topnav-links a{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);text-decoration:none;transition:color .12s ease,box-shadow .12s ease}
+.topnav-links a:hover{color:var(--ink)}
+.topnav-links a:not(.topnav-cta):hover,
+.topnav-links a.is-active{color:var(--ink);box-shadow:inset 0 -2px 0 var(--tape)}
+.topnav-cta{border:2px solid var(--ink);background:var(--tape);color:var(--ink)!important;padding:7px 12px;border-radius:var(--radius);box-shadow:2px 2px 0 var(--ink);font-weight:600}
+.topnav-cta:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+@media (max-width:520px){
+  .topnav-brand{font-size:16px}
+  .topnav-links{gap:12px}
+}
+
 .brand{
   font-family:'IBM Plex Mono',monospace;
   font-size:12px;letter-spacing:.12em;text-transform:uppercase;
@@ -257,6 +274,9 @@ footer a{color:var(--ink);text-decoration:underline}
 .legal p{margin-bottom:12px;color:var(--ink-soft);font-size:15px}
 .legal p strong{color:var(--ink)}
 .legal code{font-family:'IBM Plex Mono',monospace;font-size:13px;background:#fff;border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+.legal ul{margin:0 0 12px;padding-left:20px;color:var(--ink-soft);font-size:15px}
+.legal li{margin-bottom:8px}
+.legal a:not(.btn){color:var(--hatch);text-decoration:underline;font-weight:600}
 .legal a{color:var(--ink);font-weight:600}
 .legal-back{margin-top:28px}
 

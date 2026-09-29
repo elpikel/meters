@@ -16,7 +16,7 @@
     <meta name="theme-color" content="#F2C41D" />
     <link rel="canonical" href={canonical} />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={assigns[:og_type] || "website"} />
     <meta property="og:site_name" content="Martwe Metry" />
     <meta property="og:locale" content="pl_PL" />
     <meta property="og:title" content={seo_title} />
@@ -76,6 +76,22 @@
     </script>
   </head>
   <body>
+    <div class="ruler" aria-hidden="true"></div>
+    <header class="topnav">
+      <div class="wrap topnav-inner">
+        <.link href={~p"/"} class="topnav-brand">Martwe Metry</.link>
+        <nav class="topnav-links">
+          <.link
+            href={~p"/martwe-metry-w-mieszkaniu"}
+            class={@conn.request_path == "/martwe-metry-w-mieszkaniu" && "is-active"}
+            aria-current={@conn.request_path == "/martwe-metry-w-mieszkaniu" && "page"}
+          >
+            Poradnik
+          </.link>
+          <.link href={~p"/#zgloszenie"} class="topnav-cta">Sprawdź umowę</.link>
+        </nav>
+      </div>
+    </header>
     {@inner_content}
   </body>
 </html>

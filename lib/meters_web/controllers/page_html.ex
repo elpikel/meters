@@ -92,6 +92,54 @@ defmodule MetersWeb.PageHTML do
   end
 
   @doc """
+  Renders JSON-LD `Article` structured data for the "martwe metry" guide,
+  attributed to the cooperating kancelaria (Kraluk Kurkierewicz) so search
+  engines tie the expertise to their entity (kkadwokat.pl).
+  """
+  attr :title, :string, required: true
+  attr :description, :string, required: true
+
+  def guide_structured_data(assigns) do
+    base = MetersWeb.Endpoint.url()
+    url = base <> "/martwe-metry-w-mieszkaniu"
+
+    kancelaria = %{
+      "@type" => "LegalService",
+      "@id" => "https://kkadwokat.pl/#organization",
+      "name" => "Kraluk Kurkierewicz Adwokacka Spółka Partnerska",
+      "url" => "https://kkadwokat.pl/",
+      "sameAs" => "https://kkadwokat.pl/"
+    }
+
+    json =
+      Jason.encode!(%{
+        "@context" => "https://schema.org",
+        "@type" => "Article",
+        "@id" => url <> "#article",
+        "mainEntityOfPage" => url,
+        "url" => url,
+        "headline" => assigns.title,
+        "description" => assigns.description,
+        "inLanguage" => "pl-PL",
+        "about" => "Powierzchnia użytkowa lokalu a ściany działowe (PN-ISO 9836)",
+        "author" => kancelaria,
+        "publisher" => %{
+          "@type" => "Organization",
+          "name" => "Martwe Metry",
+          "url" => base <> "/"
+        }
+      })
+
+    assigns = assign(assigns, :json, json)
+
+    ~H"""
+    <script type="application/ld+json">
+      <%= Phoenix.HTML.raw(@json) %>
+    </script>
+    """
+  end
+
+  @doc """
   FAQ questions and plain-text answers. Single source of truth shared by the
   rendered `<details>` list and the FAQPage structured data.
   """

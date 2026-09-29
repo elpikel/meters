@@ -1,8 +1,6 @@
 <Layouts.flash_group flash={@flash} />
 <.structured_data />
 
-<div class="ruler" aria-hidden="true"></div>
-
 <main class="wrap">
   <%!-- HERO --%>
   <div class="hero">
@@ -174,111 +172,9 @@
     </div>
   </section>
 
-  <%!-- JAK TO DZIAŁA --%>
-  <section>
-    <p class="eyebrow">Krok 2 — Proces</p>
-    <h2>Jak to działa</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="no">1</div>
-        <div>
-          <h3>Zostawiasz kontakt</h3>
-          <p>
-            Podajesz podstawowe dane o zakupie. Zajmuje to <strong>mniej niż 2 minuty</strong>.
-            Nie potrzebujesz jeszcze żadnych dokumentów.
-          </p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="no">2</div>
-        <div>
-          <h3>Kancelaria bezpłatnie analizuje umowę</h3>
-          <p>
-            Współpracująca
-            <a
-              href="https://kkadwokat.pl"
-              target="_blank"
-              rel="noopener"
-            >
-              kancelaria adwokacka Kraluk Kurkierewicz
-            </a>
-            z Gdańska sprawdza umowę
-            deweloperską i rzut lokalu.
-            <strong>Analiza nic nie kosztuje i do niczego nie zobowiązuje.</strong>
-          </p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="no">3</div>
-        <div>
-          <h3>Działasz tylko, jeśli sprawa rokuje</h3>
-          <p>
-            Jeżeli w Twoich dokumentach jest podstawa do roszczenia, kancelaria przedstawia
-            warunki prowadzenia sprawy. <strong>Decyzja zawsze należy do Ciebie.</strong>
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <%!-- FAKTY --%>
-  <section>
-    <p class="eyebrow">Fakty, nie obietnice</p>
-    <h2>Najczęstsze pytania</h2>
-    <div class="facts">
-      <details>
-        <summary class="plausible-event-name=FAQ plausible-event-pytanie=problem">
-          Skąd w ogóle ten problem?
-        </summary>
-        <div class="a">
-          Norma PN-ISO 9836 stanowi, że powierzchnia pod trwałymi ścianami działowymi to
-          powierzchnia <strong>konstrukcji, nie użytkowa</strong>. Część deweloperów mimo to
-          wliczała ją do metrażu, od którego liczona była cena — czasem pod nazwą „powierzchnia
-          rozliczeniowa". Płaciłeś więc za metry, z których fizycznie nie korzystasz.
-          Kancelaria Kraluk Kurkierewicz szczegółowo omawia orzecznictwo w artykule <a
-            href="https://kkadwokat.pl/blog/zawyzony-metraz-scianki-dzialowe"
-            target="_blank"
-            rel="noopener"
-          >Zawyżony metraż przez ścianki działowe</a>.
-        </div>
-      </details>
-      <details>
-        <summary class="plausible-event-name=FAQ plausible-event-pytanie=komu-zwrot">
-          Czy każdemu należy się zwrot?
-        </summary>
-        <div class="a">
-          <strong>Nie — i nie uwierz nikomu, kto twierdzi inaczej.</strong>
-          Orzecznictwo nie jest jednolite: kluczowe jest, czy deweloper jasno poinformował Cię o
-          sposobie liczenia powierzchni. Dlatego pierwszym krokiem jest zawsze bezpłatna analiza
-          Twojej konkretnej umowy, a nie pozew.
-        </div>
-      </details>
-      <details>
-        <summary class="plausible-event-name=FAQ plausible-event-pytanie=czas">
-          Ile mam czasu?
-        </summary>
-        <div class="a">
-          Roszczenia konsumenta przedawniają się co do zasady <strong>po 6 latach</strong>, z
-          końcem roku kalendarzowego. Jeśli kupiłeś mieszkanie w 2020 r., czas może upłynąć z
-          końcem tego roku — dlatego warto sprawdzić to teraz, nie „kiedyś".
-        </div>
-      </details>
-      <details>
-        <summary class="plausible-event-name=FAQ plausible-event-pytanie=koszt">
-          Ile to kosztuje?
-        </summary>
-        <div class="a">
-          Analiza umowy jest <strong>bezpłatna</strong>. Jeśli sprawa rokuje i zdecydujesz się ją
-          prowadzić, warunki finansowe przedstawi Ci kancelaria przed podpisaniem czegokolwiek —
-          z reguły jest to model powiązany z wynikiem sprawy.
-        </div>
-      </details>
-    </div>
-  </section>
-
   <%!-- FORMULARZ --%>
   <section id="zgloszenie">
-    <p class="eyebrow">Krok 3 — Zgłoszenie</p>
+    <p class="eyebrow">Krok 2 — Zgłoszenie</p>
     <h2>Bezpłatna analiza umowy</h2>
     <p class="sub">Wypełnij, a skontaktujemy się w ciągu 2 dni roboczych.</p>
 
@@ -440,6 +336,128 @@
           Wyślij zgłoszenie — analiza bezpłatna
         </button>
       </.form>
+    </div>
+  </section>
+
+  <%!-- JAK TO DZIAŁA --%>
+  <section>
+    <p class="eyebrow">Proces</p>
+    <h2>Jak to działa</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="no">1</div>
+        <div>
+          <h3>Zostawiasz kontakt</h3>
+          <p>
+            Podajesz podstawowe dane o zakupie. Zajmuje to <strong>mniej niż 2 minuty</strong>.
+            Nie potrzebujesz jeszcze żadnych dokumentów.
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="no">2</div>
+        <div>
+          <h3>Kancelaria bezpłatnie analizuje umowę</h3>
+          <p>
+            Współpracująca
+            <a
+              href="https://kkadwokat.pl"
+              target="_blank"
+              rel="noopener"
+            >
+              kancelaria adwokacka Kraluk Kurkierewicz
+            </a>
+            z Gdańska sprawdza umowę
+            deweloperską i rzut lokalu.
+            <strong>Analiza nic nie kosztuje i do niczego nie zobowiązuje.</strong>
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="no">3</div>
+        <div>
+          <h3>Działasz tylko, jeśli sprawa rokuje</h3>
+          <p>
+            Jeżeli w Twoich dokumentach jest podstawa do roszczenia, kancelaria przedstawia
+            warunki prowadzenia sprawy. <strong>Decyzja zawsze należy do Ciebie.</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%!-- PORADNIK (teaser) --%>
+  <section>
+    <p class="eyebrow">Poradnik</p>
+    <h2>Czym są „martwe metry”?</h2>
+    <p class="sub">
+      Powierzchnia pod ścianami działowymi, wliczona do metrażu i ceny mieszkania.
+    </p>
+    <p style="margin-top:14px;color:var(--ink-soft)">
+      Kupując mieszkanie od dewelopera, patrzysz na cenę, metraż i układ. W praktyce część
+      powierzchni przyjętej do rozliczenia potrafi znajdować się pod ścianami działowymi — to
+      właśnie potoczne „martwe metry”. Sam fakt ich występowania nie oznacza jeszcze, że deweloper
+      policzył metraż lub cenę nieprawidłowo: liczy się charakter ścian (norma PN-ISO 9836), treść
+      umowy i dokumentacja. W poradniku wyjaśniamy, kiedy nabywcy może przysługiwać zwrot części
+      ceny — na tle decyzji UOKiK z 2025 r. i orzecznictwa sądów.
+    </p>
+    <.link href={~p"/martwe-metry-w-mieszkaniu"} class="btn">
+      Czytaj poradnik →
+    </.link>
+  </section>
+
+  <%!-- FAKTY --%>
+  <section>
+    <p class="eyebrow">Fakty, nie obietnice</p>
+    <h2>Najczęstsze pytania</h2>
+    <div class="facts">
+      <details>
+        <summary class="plausible-event-name=FAQ plausible-event-pytanie=problem">
+          Skąd w ogóle ten problem?
+        </summary>
+        <div class="a">
+          Norma PN-ISO 9836 stanowi, że powierzchnia pod trwałymi ścianami działowymi to
+          powierzchnia <strong>konstrukcji, nie użytkowa</strong>. Część deweloperów mimo to
+          wliczała ją do metrażu, od którego liczona była cena — czasem pod nazwą „powierzchnia
+          rozliczeniowa". Płaciłeś więc za metry, z których fizycznie nie korzystasz.
+          Kancelaria Kraluk Kurkierewicz szczegółowo omawia orzecznictwo w artykule <a
+            href="https://kkadwokat.pl/blog/zawyzony-metraz-scianki-dzialowe"
+            target="_blank"
+            rel="noopener"
+          >Zawyżony metraż przez ścianki działowe</a>.
+        </div>
+      </details>
+      <details>
+        <summary class="plausible-event-name=FAQ plausible-event-pytanie=komu-zwrot">
+          Czy każdemu należy się zwrot?
+        </summary>
+        <div class="a">
+          <strong>Nie — i nie uwierz nikomu, kto twierdzi inaczej.</strong>
+          Orzecznictwo nie jest jednolite: kluczowe jest, czy deweloper jasno poinformował Cię o
+          sposobie liczenia powierzchni. Dlatego pierwszym krokiem jest zawsze bezpłatna analiza
+          Twojej konkretnej umowy, a nie pozew.
+        </div>
+      </details>
+      <details>
+        <summary class="plausible-event-name=FAQ plausible-event-pytanie=czas">
+          Ile mam czasu?
+        </summary>
+        <div class="a">
+          Roszczenia konsumenta przedawniają się co do zasady <strong>po 6 latach</strong>, z
+          końcem roku kalendarzowego. Jeśli kupiłeś mieszkanie w 2020 r., czas może upłynąć z
+          końcem tego roku — dlatego warto sprawdzić to teraz, nie „kiedyś".
+        </div>
+      </details>
+      <details>
+        <summary class="plausible-event-name=FAQ plausible-event-pytanie=koszt">
+          Ile to kosztuje?
+        </summary>
+        <div class="a">
+          Analiza umowy jest <strong>bezpłatna</strong>. Jeśli sprawa rokuje i zdecydujesz się ją
+          prowadzić, warunki finansowe przedstawi Ci kancelaria przed podpisaniem czegokolwiek —
+          z reguły jest to model powiązany z wynikiem sprawy.
+        </div>
+      </details>
     </div>
   </section>
 </main>

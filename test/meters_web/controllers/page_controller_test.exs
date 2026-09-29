@@ -61,6 +61,19 @@ defmodule MetersWeb.PageControllerTest do
     end
   end
 
+  describe "GET /martwe-metry-w-mieszkaniu" do
+    test "renders the guide with SEO tags, Article JSON-LD and a kancelaria link", %{conn: conn} do
+      html = conn |> get(~p"/martwe-metry-w-mieszkaniu") |> html_response(200)
+
+      assert html =~ "Martwe metry w mieszkaniu"
+      assert html =~ ~s(rel="canonical")
+      assert html =~ ~s("@type":"Article")
+      assert html =~ "PN-ISO 9836"
+      # keyword-rich backlink to the kancelaria (SEO for kkadwokat.pl)
+      assert html =~ ~s(href="https://kkadwokat.pl")
+    end
+  end
+
   describe "GET /polityka-prywatnosci" do
     test "renders the privacy policy page", %{conn: conn} do
       html = conn |> get(~p"/polityka-prywatnosci") |> html_response(200)
@@ -72,13 +85,16 @@ defmodule MetersWeb.PageControllerTest do
   end
 
   describe "GET /sitemap.xml" do
-    test "returns an XML sitemap listing the home page", %{conn: conn} do
+    test "lists every page with lastmod", %{conn: conn} do
       conn = get(conn, ~p"/sitemap.xml")
 
       assert response_content_type(conn, :xml)
       body = response(conn, 200)
       assert body =~ "<urlset"
       assert body =~ "<loc>"
+      assert body =~ "/martwe-metry-w-mieszkaniu</loc>"
+      assert body =~ "/polityka-prywatnosci</loc>"
+      assert body =~ "<lastmod>"
     end
   end
 
