@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
     <meta name="google-site-verification" content="RFBvY5kAPpeLrjWlZgrcXlAVI-SySdKrZbvzXQlheJ4" />
-    <% seo_title = assigns[:page_title] || "Sprawdź, czy deweloper doliczył Ci metry pod ścianami" %>
+    <% seo_title =
+      assigns[:page_title] || "Martwe metry: sprawdź, czy deweloper zawyżył metraż mieszkania" %>
     <% seo_desc =
       assigns[:meta_description] ||
         "Deweloperzy doliczali do ceny mieszkania powierzchnię pod ścianami działowymi. Sprawdź w 2 minuty, ile mogłeś nadpłacić — bezpłatna analiza umowy." %>
@@ -31,7 +32,7 @@
     <meta name="twitter:description" content={seo_desc} />
     <meta name="twitter:image" content={og_image} />
 
-    <.live_title default="Sprawdź, czy deweloper doliczył Ci metry pod ścianami">
+    <.live_title default="Martwe metry: sprawdź, czy deweloper zawyżył metraż mieszkania">
       {assigns[:page_title]}
     </.live_title>
     <link rel="icon" href={~p"/favicon.ico"} sizes="any" />

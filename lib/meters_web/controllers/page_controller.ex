@@ -5,7 +5,7 @@ defmodule MetersWeb.PageController do
 
   alias Meters.Leads
 
-  @page_title "Sprawdź, czy deweloper doliczył Ci metry pod ścianami"
+  @page_title "Martwe metry: sprawdź, czy deweloper zawyżył metraż mieszkania"
   @meta_description "Deweloperzy doliczali do ceny mieszkania powierzchnię pod ścianami działowymi. Sprawdź w 2 minuty, ile mogłeś nadpłacić — bezpłatna analiza umowy."
 
   def home(conn, _params) do
@@ -38,8 +38,8 @@ defmodule MetersWeb.PageController do
     Ecto.Changeset.traverse_errors(changeset, &MetersWeb.CoreComponents.translate_error/1)
   end
 
-  @guide_title "Martwe metry w mieszkaniu — czy deweloper prawidłowo ustalił powierzchnię użytkową lokalu?"
-  @guide_description "Martwe metry to powierzchnia pod ścianami działowymi wliczona do metrażu mieszkania. Wyjaśniamy normę PN-ISO 9836, decyzje UOKiK, orzecznictwo sądów i nowe przepisy od 13 lutego 2026 r. — oraz kiedy nabywcy przysługuje zwrot części ceny."
+  @guide_title "Martwe metry w mieszkaniu — kiedy należy się zwrot od dewelopera?"
+  @guide_description "Martwe metry to powierzchnia pod ścianami działowymi wliczona do metrażu mieszkania. Norma PN-ISO 9836, decyzje UOKiK i orzecznictwo — kiedy należy się zwrot."
 
   def guide(conn, _params) do
     conn
